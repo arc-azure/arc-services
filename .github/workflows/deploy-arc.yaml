@@ -21,29 +21,25 @@ jobs:
         with:
           cluster-name: ${{ secrets.AKS_CLUSTER_NAME }}
           resource-group: ${{ secrets.AKS_RESOURCE_GROUP }}
-          subscription: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Create namespace for ARC
+      - name: Create ARC namespace
         run: |
           kubectl create namespace actions-runner-system --dry-run=client -o yaml | kubectl apply -f -
 
-      - name: Add Helm repositories
-        run: |
-          helm repo add actions-runner-controller https://actions-runner-controller.github.io/actions-runner-controller
-          helm repo add jetstack https://charts.jetstack.io
-          helm repo update
-
       - name: Install cert-manager
         run: |
-          kubectl create namespace cert-manager --dry-run=client -o yaml | kubectl apply -f -
+          kubectl apply --validate=false -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.2/cert-manager.crds.yaml
+          helm repo add jetstack https://charts.jetstack.io
+          helm repo update
           helm upgrade --install cert-manager jetstack/cert-manager \
             --namespace cert-manager \
-            --version v1.14.4 \
-            --set installCRDs=true
+            --create-namespace \
+            --version v1.14.2
 
-      - name: Wait for cert-manager to be ready
+      - name: Add ARC Helm repo
         run: |
-          kubectl rollout status deployment cert-manager -n cert-manager --timeout=120s
+          helm repo add actions-runner-controller https://actions-runner-controller.github.io/actions-runner-controller
+          helm repo update
 
       - name: Install actions-runner-controller
         run: |
@@ -52,8 +48,15 @@ jobs:
             --create-namespace \
             --set=authSecret.create=true \
             --set=authSecret.github_token=${{ secrets.GH_TOKEN_ARC }}
-      - name: List repo files
-        run: ls -la
+
+      - name: Wait for ARC webhook to be ready
+        run: |
+          echo "Waiting for ARC webhook to be ready..."
+          kubectl rollout status deployment/arc-actions-runner-controller -n actions-runner-system --timeout=120s
+
+      - name: Check ARC pods
+        run: |
+          kubectl get pods -n actions-runner-system
 
       - name: Apply runner deployment
         run: |
