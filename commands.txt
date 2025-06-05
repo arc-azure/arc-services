@@ -1,0 +1,7 @@
+kubectl create namespace actions-runner-system
+
+helm install arc actions-runner-controller/actions-runner-controller \
+  --namespace actions-runner-system \
+  --create-namespace \
+  --set=authSecret.create=true \
+  --set=authSecret.github_token="ghp_XXXXX

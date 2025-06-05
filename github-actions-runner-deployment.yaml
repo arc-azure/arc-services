@@ -1,0 +1,21 @@
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: rn-develop
+  namespace: actions-runner-system
+spec:
+  replicas: 4
+  template:
+    spec:
+      enterprise: "kbtlctesting"
+      group: "gh-runners-develop"
+      image: ubuntu:22.04
+      dockerdWithinRunnerContainer: true
+      ephemeral: true
+      resources:
+        limits:
+          cpu: "2.0"
+          memory: "4Gi"
+        requests:
+          cpu: "1.0"
+          memory: "2Gi"
