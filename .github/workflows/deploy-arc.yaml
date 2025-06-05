@@ -57,4 +57,4 @@ jobs:
 
       - name: Apply runner deployment
         run: |
-          kubectl apply -f manifests/github-actions-runner-deployment.yml
+          kubectl apply -f ./manifests/github-actions-runner-deployment.yml
