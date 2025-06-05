@@ -38,7 +38,7 @@ jobs:
             --namespace actions-runner-system \
             --create-namespace \
             --set=authSecret.create=true \
-            --set=authSecret.github_token=${{ secrets.GITHUB_TOKEN_ARC }}
+            --set=authSecret.github_token=${{ secrets.GH_TOKEN_ARC }}
 
       - name: Apply runner deployment
         run: |
