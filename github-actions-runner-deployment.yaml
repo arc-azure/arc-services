@@ -7,7 +7,7 @@ spec:
   replicas: 4
   template:
     spec:
-      enterprise: "kbtlctesting"
+      enterprise: "testing-devsecops"
       group: "develop-arc"
       image: ubuntu:22.04
       dockerdWithinRunnerContainer: true
