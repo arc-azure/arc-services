@@ -52,7 +52,9 @@ jobs:
             --create-namespace \
             --set=authSecret.create=true \
             --set=authSecret.github_token=${{ secrets.GH_TOKEN_ARC }}
+      - name: List repo files
+        run: ls -la
 
       - name: Apply runner deployment
         run: |
-          kubectl apply -f github-actions-runner-deployment.yml
+          kubectl apply -f manifests/github-actions-runner-deployment.yml
