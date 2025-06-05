@@ -21,15 +21,29 @@ jobs:
         with:
           cluster-name: ${{ secrets.AKS_CLUSTER_NAME }}
           resource-group: ${{ secrets.AKS_RESOURCE_GROUP }}
+          subscription: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Create namespace
+      - name: Create namespace for ARC
         run: |
           kubectl create namespace actions-runner-system --dry-run=client -o yaml | kubectl apply -f -
 
-      - name: Add Helm repo
+      - name: Add Helm repositories
         run: |
           helm repo add actions-runner-controller https://actions-runner-controller.github.io/actions-runner-controller
+          helm repo add jetstack https://charts.jetstack.io
           helm repo update
+
+      - name: Install cert-manager
+        run: |
+          kubectl create namespace cert-manager --dry-run=client -o yaml | kubectl apply -f -
+          helm upgrade --install cert-manager jetstack/cert-manager \
+            --namespace cert-manager \
+            --version v1.14.4 \
+            --set installCRDs=true
+
+      - name: Wait for cert-manager to be ready
+        run: |
+          kubectl rollout status deployment cert-manager -n cert-manager --timeout=120s
 
       - name: Install actions-runner-controller
         run: |
