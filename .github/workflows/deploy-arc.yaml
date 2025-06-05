@@ -10,6 +10,7 @@ on:
 
 jobs:
   deploy:
+    if: ${{ github.event.inputs.log != 'true' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -70,7 +71,7 @@ jobs:
   show-logs:
     if: ${{ github.event.inputs.log == 'true' }}
     runs-on: ubuntu-latest
-    needs: deploy
+
     steps:
       - name: Azure Login
         uses: azure/login@v1
@@ -95,4 +96,6 @@ jobs:
           if [ -n "$POD" ]; then
             echo "Logs del runner: $POD"
             kubectl logs -n actions-runner-system $POD -c runner
-          e
+          else
+            echo "No se encontró ningún runner aún."
+          fi
