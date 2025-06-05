@@ -8,7 +8,7 @@ spec:
   template:
     spec:
       enterprise: "kbtlctesting"
-      group: "gh-runners-develop"
+      group: "develop-arc"
       image: ubuntu:22.04
       dockerdWithinRunnerContainer: true
       ephemeral: true
