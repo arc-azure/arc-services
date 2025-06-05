@@ -2,6 +2,11 @@ name: Deploy ARC and Runners
 
 on:
   workflow_dispatch:
+    inputs:
+      log:
+        description: "¿Ver logs después del despliegue?"
+        required: false
+        default: "false"
 
 jobs:
   deploy:
@@ -61,3 +66,33 @@ jobs:
       - name: Apply runner deployment
         run: |
           kubectl apply -f ./manifests/github-actions-runner-deployment.yml
+
+  show-logs:
+    if: ${{ github.event.inputs.log == 'true' }}
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set AKS context
+        uses: azure/aks-set-context@v3
+        with:
+          cluster-name: ${{ secrets.AKS_CLUSTER_NAME }}
+          resource-group: ${{ secrets.AKS_RESOURCE_GROUP }}
+
+      - name: Ver logs del ARC controller
+        run: |
+          POD=$(kubectl get pods -n actions-runner-system -l app.kubernetes.io/name=actions-runner-controller -o jsonpath="{.items[0].metadata.name}")
+          echo "Logs del controller: $POD"
+          kubectl logs -n actions-runner-system $POD -c manager
+
+      - name: Ver logs del primer runner (si existe)
+        run: |
+          POD=$(kubectl get pods -n actions-runner-system -l app.kubernetes.io/component=runner -o jsonpath="{.items[0].metadata.name}")
+          if [ -n "$POD" ]; then
+            echo "Logs del runner: $POD"
+            kubectl logs -n actions-runner-system $POD -c runner
+          e
