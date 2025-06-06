@@ -86,16 +86,8 @@ jobs:
 
       - name: Ver logs del ARC controller
         run: |
-          POD=$(kubectl get pods -n actions-runner-system -l app.kubernetes.io/name=actions-runner-controller -o jsonpath="{.items[0].metadata.name}")
-          echo "Logs del controller: $POD"
-          kubectl logs -n actions-runner-system $POD -c manager
-
-      - name: Ver logs del primer runner (si existe)
+          kubectl get pods -n actions-runner-system | grep runner
+          
+      - name: Ver logs del ARC controller 2
         run: |
-          POD=$(kubectl get pods -n actions-runner-system -l app.kubernetes.io/component=runner -o jsonpath="{.items[0].metadata.name}")
-          if [ -n "$POD" ]; then
-            echo "Logs del runner: $POD"
-            kubectl logs -n actions-runner-system $POD -c runner
-          else
-            echo "No se encontró ningún runner aún."
-          fi
+          kubectl logs -n actions-runner-system deployment/arc-actions-runner-controller
