@@ -5,7 +5,6 @@ on:
 
 jobs:
   deploy:
-    if: ${{ github.event.inputs.log != 'true' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -68,7 +67,7 @@ jobs:
       - name: Echo ARC deployment
         run: |
           helm list -A
-          
+
       - name: Mostrar logs completos del ARC controller
         run: |
           echo "Mostrando pods del namespace actions-runner-system..."
