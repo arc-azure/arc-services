@@ -25,4 +25,4 @@ jobs:
       - name: Check ARC pods
         run: |
           kubectl get pods -n actions-runner-system
-          kubectl describe pod rn-develop-ncgvh-lh5kq -n actions-runner-system
+

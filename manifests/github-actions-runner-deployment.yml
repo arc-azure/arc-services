@@ -1,5 +1,5 @@
 apiVersion: actions.summerwind.dev/v1alpha1
-kind: RunnerDeployment
+kind: Runner
 metadata:
   name: rn-develop
   namespace: actions-runner-system

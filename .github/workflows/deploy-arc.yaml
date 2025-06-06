@@ -46,8 +46,6 @@ jobs:
           helm upgrade --install arc actions-runner-controller/actions-runner-controller \
             --namespace actions-runner-system \
             --create-namespace \
-            --set runner.registrationTimeout="15m0s" \
-            --set githubConfigUrl="https://github.com/enterprises/testing-devsecops" \
             --set=authSecret.create=true \
             --set=authSecret.github_token=${{ secrets.GH_TOKEN_ARC }}
 
