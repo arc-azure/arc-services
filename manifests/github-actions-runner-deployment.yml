@@ -7,7 +7,7 @@ spec:
   replicas: 1
   template:
     spec:
-      enterprise: "Testing-DevSecOps"
+      enterprise: "testing-devsecops"
       group: "gh-rn-develop"
       image: ghcr.io/actions/actions-runner:latest
       dockerdWithinRunnerContainer: true
