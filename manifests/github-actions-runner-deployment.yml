@@ -11,7 +11,7 @@ spec:
       group: "gh-rn-develop"
       image: ghcr.io/actions/actions-runner:latest
       dockerdWithinRunnerContainer: true
-      ephemeral: false
+      ephemeral: true
       resources:
         limits:
           cpu: "2"
