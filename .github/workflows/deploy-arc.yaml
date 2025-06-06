@@ -72,7 +72,7 @@ jobs:
         run: |
           echo "Esperando pod del runner..."
           for i in {1..12}; do
-            pod=$(kubectl get pods -n actions-runner-system -l actions.github.com/runner-deployment-name=develop-arc -o jsonpath="{.items[0].metadata.name}")
+            pod=$(kubectl get pods -n actions-runner-system -l actions.github.com/runner-deployment-name=gh-rn-develop -o jsonpath="{.items[0].metadata.name}")
             if [ -n "$pod" ]; then
               echo "Runner pod encontrado: $pod"
               kubectl logs $pod -n actions-runner-system --tail=100
@@ -114,7 +114,7 @@ jobs:
 
       - name: Mostrar logs del runner (si existe)
         run: |
-          pod=$(kubectl get pods -n actions-runner-system -l actions.github.com/runner-deployment-name=develop-arc -o jsonpath="{.items[0].metadata.name}")
+          pod=$(kubectl get pods -n actions-runner-system -l actions.github.com/runner-deployment-name=gh-rn-develop -o jsonpath="{.items[0].metadata.name}")
           if [ -n "$pod" ]; then
             echo "------ Logs del runner: $pod ------"
             kubectl logs $pod -n actions-runner-system --tail=100
