@@ -76,20 +76,5 @@ jobs:
           else
             echo "No se encontró el pod del ARC controller."
           fi
-          
-      - name: Esperar pod del runner y mostrar logs
-        run: |
-          echo "Esperando pod del runner..."
-          for i in {1..12}; do
-            pod=$(kubectl get pods -n actions-runner-system -l actions.github.com/runner-deployment-name=gh-rn-develop -o jsonpath="{.items[0].metadata.name}")
-            if [ -n "$pod" ]; then
-              echo "Runner pod encontrado: $pod"
-              kubectl logs $pod -n actions-runner-system --tail=100
-              exit 0
-            fi
-            echo "Intento $i: Pod aún no aparece, esperando 10s..."
-            sleep 10
-          done
-          echo "No se encontró ningún pod del runner después de 2 minutos."
-          exit 1
+ 
 
