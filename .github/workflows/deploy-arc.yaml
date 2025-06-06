@@ -69,7 +69,7 @@ jobs:
           kubectl apply -f ./manifests/github-actions-runner-deployment.yml
 
   show-logs:
-    if: ${{ github.event.inputs.log == 'true' }}
+    # if: ${{ github.event.inputs.log == 'true' }}
     runs-on: ubuntu-latest
 
     steps:
