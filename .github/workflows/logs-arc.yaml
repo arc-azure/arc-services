@@ -25,4 +25,5 @@ jobs:
       - name: Check ARC pods
         run: |
           kubectl get pods -n actions-runner-system
+          kubectl get nodes
 
