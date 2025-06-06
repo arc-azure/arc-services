@@ -26,9 +26,9 @@ metadata:
   name: rn-develop
   namespace: actions-runner-system
 spec:
-  enterprise: "Testing-DevSecOps"
+  enterprise: "Testing-DevSecOps"  # o "organization" si aplica
   group: "gh-rn-develop"
-  image: ghcr.io/actions/actions-runner:ubuntu-20.04
+  image: johanrn21/gh-runner-ubuntu:latest  # <-- Aquí usas tu imagen
   dockerdWithinRunnerContainer: true
   ephemeral: false
   resources:
@@ -38,3 +38,4 @@ spec:
     requests:
       cpu: "1"
       memory: "2Gi"
+
