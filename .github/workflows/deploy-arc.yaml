@@ -63,7 +63,11 @@ jobs:
 
       - name: Apply runner deployment
         run: |
-          kubectl apply -f ./manifests/github-actions-runner-deployment.yml
+          kubectl apply -f manifests/github-actions-runner-deployment.yml
+          
+      - name: Echo ARC deployment
+        run: |
+          helm list -A
 
       - name: Mostrar logs completos del ARC controller
         run: |
