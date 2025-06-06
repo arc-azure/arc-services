@@ -12,7 +12,6 @@ spec:
       image: ghcr.io/actions/actions-runner:latest
       dockerdWithinRunnerContainer: true
       ephemeral: true
-      registrationTimeout: "15m0s"
       resources:
         limits:
           cpu: "1.5"
