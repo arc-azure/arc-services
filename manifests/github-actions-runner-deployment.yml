@@ -7,15 +7,15 @@ spec:
   replicas: 1
   template:
     spec:
-      enterprise: testing-devsecops
-      group: develop-arc
+      enterprise: "testing-devsecops"
+      group: "develop-arc"
       image: ghcr.io/actions/actions-runner:latest
       dockerdWithinRunnerContainer: true
       ephemeral: true
       resources:
         limits:
-          cpu: "1500m"
+          cpu: "1.5"
           memory: "3Gi"
         requests:
-          cpu: "500m"
+          cpu: "0.5"
           memory: "1Gi"
