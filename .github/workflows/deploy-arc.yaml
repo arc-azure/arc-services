@@ -2,11 +2,6 @@ name: Deploy ARC and Runners
 
 on:
   workflow_dispatch:
-    inputs:
-      log:
-        description: "¿Ver logs después del despliegue?"
-        required: false
-        default: "false"
 
 jobs:
   deploy:
@@ -68,6 +63,20 @@ jobs:
         run: |
           kubectl apply -f ./manifests/github-actions-runner-deployment.yml
 
+      - name: Mostrar logs completos del ARC controller
+        run: |
+          echo "Mostrando pods del namespace actions-runner-system..."
+          kubectl get pods -n actions-runner-system
+          
+          pod=$(kubectl get pods -n actions-runner-system -l app.kubernetes.io/name=actions-runner-controller -o jsonpath="{.items[0].metadata.name}")
+          
+          if [ -n "$pod" ]; then
+            echo "------ Logs COMPLETOS del ARC controller ($pod) ------"
+            kubectl logs $pod -n actions-runner-system
+          else
+            echo "No se encontró el pod del ARC controller."
+          fi
+          
       - name: Esperar pod del runner y mostrar logs
         run: |
           echo "Esperando pod del runner..."
@@ -84,39 +93,3 @@ jobs:
           echo "No se encontró ningún pod del runner después de 2 minutos."
           exit 1
 
-  show-logs:
-    if: ${{ github.event.inputs.log == 'true' }}
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Set AKS context
-        uses: azure/aks-set-context@v3
-        with:
-          cluster-name: ${{ secrets.AKS_CLUSTER_NAME }}
-          resource-group: ${{ secrets.AKS_RESOURCE_GROUP }}
-
-      - name: Mostrar logs del ARC controller
-        run: |
-          echo "Mostrando pods del namespace actions-runner-system..."
-          kubectl get pods -n actions-runner-system
-          echo "------ Logs del ARC controller ------"
-          pod=$(kubectl get pods -n actions-runner-system -l app.kubernetes.io/name=actions-runner-controller -o jsonpath="{.items[0].metadata.name}")
-          if [ -n "$pod" ]; then
-            kubectl logs $pod -n actions-runner-system --tail=100
-          else
-            echo "No se encontró el pod del ARC controller."
-          fi
-
-      - name: Mostrar logs del runner (si existe)
-        run: |
-          pod=$(kubectl get pods -n actions-runner-system -l actions.github.com/runner-deployment-name=gh-rn-develop -o jsonpath="{.items[0].metadata.name}")
-          if [ -n "$pod" ]; then
-            echo "------ Logs del runner: $pod ------"
-            kubectl logs $pod -n actions-runner-system --tail=100
-          else
-            echo "No se encontró ningún pod del runner."
