@@ -87,7 +87,3 @@ jobs:
       - name: Ver logs del ARC controller
         run: |
           kubectl get pods -n actions-runner-system
-          
-      - name: Ver logs del ARC controller 2
-        run: |
-          kubectl logs -n actions-runner-system deployment/arc-actions-runner-controller
