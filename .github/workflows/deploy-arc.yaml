@@ -68,10 +68,7 @@ jobs:
       - name: Echo ARC deployment
         run: |
           helm list -A
-          kubectl get secret -n actions-runner-system
-          kubectl get controllerconfig -n actions-runner-system
-
-
+          
       - name: Mostrar logs completos del ARC controller
         run: |
           echo "Mostrando pods del namespace actions-runner-system..."
